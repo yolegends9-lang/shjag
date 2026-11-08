@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#17091f">
+<title>A Diwali Surprise for Roshini</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --gold: #ffdc91;
+  --cream: #fff0d1;
+  --purple: #190b25;
+}
+
+body {
+  background: var(--purple);
+  color: var(--cream);
+  font-family: Georgia, serif;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* FIREWORK CANVAS */
+
+#particles {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* PAGE BACKGROUNDS */
+
+.page {
+  position: fixed;
+  inset: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 22px;
+  overflow-y: auto;
+  z-index: 2;
+
+  background:
+    radial-gradient(ellipse at 50% 35%, #572442 0%, transparent 65%),
+    linear-gradient(145deg, #17091f, #32142d 65%, #100817);
+}
+
+.page.active {
+  display: flex;
+  animation: enterPage .8s ease both;
+}
+
+@keyframes enterPage {
+  from {
+    opacity: 0;
+    transform: scale(1.035);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.content {
+  position: relative;
+  z-index: 5;
+  width: min(100%, 600px);
+  padding: 15px 0 35px;
+}
+
+.page-number {
+  position: absolute;
+  bottom: 17px;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  color: #d6b78f;
+  font-size: 10px;
+  letter-spacing: 4px;
+}
+
+.eyebrow {
+  color: var(--gold);
+  font-size: 11px;
+  letter-spacing: 5px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+h1, h2 {
+  color: var(--gold);
+  font-weight: normal;
+  text-shadow: 0 0 25px #ffb74755;
+}
+
+h1 {
+  font-size: clamp(42px, 10vw, 70px);
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: clamp(27px, 7vw, 40px);
+  margin-bottom: 15px;
+}
+
+.description {
+  max-width: 430px;
+  margin: 20px auto 27px;
+  color: #f5dfc4;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+.gold-line {
+  width: 110px;
+  height: 1px;
+  margin: 24px auto;
+  background: linear-gradient(
+    90deg, transparent, var(--gold), transparent
+  );
+}
+
+.btn {
+  border: 1px solid #ffe0a0;
+  border-radius: 50px;
+  padding: 14px 27px;
+  margin-top: 15px;
+  background: linear-gradient(135deg, #ffe5a8, #e89b43);
+  color: #39192b;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: 0 0 25px #ffbd5755;
+  transition: .3s;
+}
+
+.btn:active {
+  transform: scale(.95);
+}
+
+.btn:disabled {
+  opacity: .35;
+  cursor: not-allowed;
+}
+
+.hint, .counter {
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  margin-top: 17px;
+}
+
+.hint {
+  color: #d8b99a;
+}
+
+.counter {
+  color: var(--gold);
+}
+
+/* PAGE 1 */
+
+.welcome-lamp {
+  font-size: 75px;
+  display: inline-block;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 0 22px #ffb63e);
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  50% { transform: translateY(-12px); }
+}
+
+/* PAGE 2 DIYAS */
+
+.diya-area {
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  gap: 25px;
+  margin: 55px auto 35px;
+}
+
+.diya-wrap {
+  width: 90px;
+  height: 120px;
+  position: relative;
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.diya {
+  width: 85px;
+  height: 43px;
+  position: relative;
+  border-radius: 10px 10px 50% 50%;
+  background: linear-gradient(
+    180deg, #ffd88a, #d77a29 60%, #853616
+  );
+  border: 1px solid #ffe0a0;
+  box-shadow:
+    inset 0 5px 10px #ffffff55,
+    0 8px 18px #0008;
+}
+
+.diya::after {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 11px;
+  width: 60px;
+  height: 13px;
+  border-radius: 50%;
+  background: #642719;
+  border: 2px solid #f2bc69;
+}
+
+.flame {
+  position: absolute;
+  bottom: 36px;
+  left: 50%;
+  width: 20px;
+  height: 32px;
+  transform: translateX(-50%);
+  border-radius: 50% 50% 45% 45%;
+  background: linear-gradient(
+    to top, #ff6619, #ffcf48, #fff9c8
+  );
+  opacity: 0;
+  filter: drop-shadow(0 0 12px #ffad27);
+}
+
+.diya-wrap.lit .flame {
+  opacity: 1;
+  animation: flicker .6s infinite alternate;
+}
+
+.diya-wrap.lit .diya {
+  box-shadow: 0 0 30px #ffb63888;
+}
+
+@keyframes flicker {
+  from {
+    transform: translateX(-50%) scale(1) rotate(-5deg);
+  }
+  to {
+    transform: translateX(-50%) scale(.83) rotate(5deg);
+  }
+}
+
+/* PAGE 3 FIREWORK BUTTONS */
+
+.firework-area {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 40px auto;
+}
+
+.firework {
+  width: 95px;
+  height: 105px;
+  border-radius: 18px;
+  border: 1px solid #dcae6877;
+  background: #ffffff0d;
+  color: white;
+  font-size: 37px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: .3s;
+}
+
+.firework small {
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.firework.done {
+  background: #ffd77a22;
+  border-color: var(--gold);
+  transform: scale(.94);
+}
+
+/* PAGE 4 RANGOLI */
+
+.rangoli {
+  width: min(76vw, 320px);
+  height: min(76vw, 320px);
+  position: relative;
+  margin: 25px auto;
+  animation: rangoliIn 1.5s ease both;
+}
+
+.rangoli svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 15px #ffb64a66);
+}
+
+@keyframes rangoliIn {
+  from {
+    opacity: 0;
+    transform: rotate(-70deg) scale(.4);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
+}
+
+.rangoli-center {
+  position: absolute;
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  background: #fff5b5;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 30px 12px #ffbd50aa;
+  cursor: pointer;
+  transition: .4s;
+}
+
+.rangoli-center.completed {
+  box-shadow: 0 0 55px 25px #ffcf64;
+  transform: translate(-50%, -50%) scale(2);
+}
+
+/* PAGE 5 LETTER */
+
+.letter-card {
+  border: 1px solid #d7ae6b;
+  border-radius: 22px;
+  padding: 28px 23px;
+  margin: 25px auto;
+  max-width: 480px;
+  background: linear-gradient(145deg, #ffffff18, #ffffff08);
+  box-shadow: 0 0 40px #d89a3b22;
+  animation: letterIn 1.2s ease both;
+}
+
+@keyframes letterIn {
+  from {
+    opacity: 0;
+    transform: translateY(35px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.letter-title {
+  font-family: "Brush Script MT", cursive;
+  font-size: clamp(37px, 9vw, 54px);
+  color: #ffdc91;
+  margin-bottom: 20px;
+}
+
+.letter-text {
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  color: #f7e6d0;
+  line-height: 2;
+}
+
+.signature {
+  font-family: "Brush Script MT", cursive;
+  font-size: 31px;
+  color: #ffdc91;
+  margin-top: 20px;
+}
+
+.heart {
+  font-size: 26px;
+  margin-top: 15px;
+  animation: heartbeat 1.3s infinite;
+}
+
+@keyframes heartbeat {
+  50% { transform: scale(1.2); }
+}
+
+@media(max-width: 400px) {
+  .diya-area { gap: 12px; }
+  .diya-wrap { transform: scale(.9); }
+  .firework { width: 83px; }
+  .letter-card { padding: 23px 17px; }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="particles"></canvas>
+
+<!-- PAGE 1: WELCOME -->
+
+<section class="page active" id="page1">
+  <div class="content">
+
+    <div class="welcome-lamp">🪔</div>
+
+    <p class="eyebrow">A little festive surprise</p>
+
+    <h1>Happy<br>Diwali</h1>
+
+    <div class="gold-line"></div>
+
+    <p class="description">
+      Some festivals are more beautiful when
+      we share a little happiness with someone.
+      <br><br>
+      Roshini, this little surprise is for you.
+    </p>
+
+    <button class="btn" onclick="goToPage(2)">
+      BEGIN THE SURPRISE ✨
+    </button>
+
+  </div>
+  <div class="page-number">01 / 05</div>
+</section>
+
+
+<!-- PAGE 2: LIGHT DIYAS -->
+
+<section class="page" id="page2">
+  <div class="content">
+
+    <p class="eyebrow">CHAPTER 01</p>
+
+    <h2>Light the Diyas</h2>
+
+    <p class="description">
+      Every little light brings a little more happiness.
+      Tap each diya to light it.
+    </p>
+
+    <div class="diya-area">
+
+      <div class="diya-wrap" onclick="lightDiya(0)">
+        <div class="flame"></div>
+        <div class="diya"></div>
+      </div>
+
+      <div class="diya-wrap" onclick="lightDiya(1)">
+        <div class="flame"></div>
+        <div class="diya"></div>
+      </div>
+
+      <div class="diya-wrap" onclick="lightDiya(2)">
+        <div class="flame"></div>
+        <div class="diya"></div>
+      </div>
+
+    </div>
+
+    <p class="counter" id="diyaCounter">
+      0 / 3 diyas glowing
+    </p>
+
+    <button class="btn" id="diyaNext"
+      onclick="goToPage(3)" disabled>
+      CONTINUE →
+    </button>
+
+    <p class="hint">Light all three diyas first.</p>
+
+  </div>
+  <div class="page-number">02 / 05</div>
+</section>
+
+
+<!-- PAGE 3: FIREWORKS -->
+
+<section class="page" id="page3">
+  <div class="content">
+
+    <p class="eyebrow">CHAPTER 02</p>
+
+    <h2>Let the Sky Shine</h2>
+
+    <p class="description">
+      It's time for some festive magic!
+      Tap all three fireworks and watch the sky glow.
+    </p>
+
+    <div class="firework-area">
+
+      <button class="firework" onclick="launchFirework(0)">
+        🎆
+        <small>FIREWORK 1</small>
+      </button>
+
+      <button class="firework" onclick="launchFirework(1)">
+        🎇
+        <small>FIREWORK 2</small>
+      </button>
+
+      <button class="firework" onclick="launchFirework(2)">
+        ✨
+        <small>FIREWORK 3</small>
+      </button>
+
+    </div>
+
+    <p class="counter" id="fireCounter">
+      0 / 3 fireworks launched
+    </p>
+
+    <button class="btn" id="fireNext"
+      onclick="goToPage(4)" disabled>
+      NEXT SURPRISE →
+    </button>
+
+    <p class="hint">
+      Tap each firework to unlock the next page.
+    </p>
+
+  </div>
+  <div class="page-number">03 / 05</div>
+</section>
+
+
+<!-- PAGE 4: RANGOLI -->
+
+<section class="page" id="page4">
+  <div class="content">
+
+    <p class="eyebrow">CHAPTER 03</p>
+
+    <h2>A Little Colour & Magic</h2>
+
+    <p class="description">
+      A beautiful Diwali rangoli, made just for
+      this little celebration.
+    </p>
+
+    <div class="rangoli">
+      <svg viewBox="0 0 300 300">
+
+        <defs>
+          <radialGradient id="goldPetal">
+            <stop offset="0%" stop-color="#fff1a6"/>
+            <stop offset="100%" stop-color="#ef8d37"/>
+          </radialGradient>
+        </defs>
+
+        <circle cx="150" cy="150" r="120"
+          fill="none" stroke="#ffd77a" stroke-width="2"/>
+
+        <circle cx="150" cy="150" r="103"
+          fill="none" stroke="#ff8eac" stroke-width="3"
+          stroke-dasharray="5 7"/>
+
+        <circle cx="150" cy="150" r="83"
+          fill="none" stroke="#f5ca67" stroke-width="2"/>
+
+        <g transform="translate(150 150)">
+
+          <ellipse cx="0" cy="-48" rx="18" ry="48"
+            fill="url(#goldPetal)" stroke="#fff0b0"/>
+
+          <ellipse cx="0" cy="-48" rx="18" ry="48"
+            fill="#e96883" stroke="#ffc4aa"
+            transform="rotate(45)"/>
+
+          <ellipse cx="0" cy="-48" rx="18" ry="48"
+            fill="#65b8a2" stroke="#d3ffcf"
+            transform="rotate(90)"/>
+
+          <ellipse cx="0" cy="-48" rx="18" ry="48"
+            fill="#8f79d9" stroke="#d6c8ff"
+            transform="rotate(135)"/>
+
+          <ellipse cx="0" cy="-48" rx="18" ry="48"
+            fill="#e96883" stroke="#ffc4aa"
+            transform="rotate(180)"/>
+
+          <ellipse cx="0" cy="-48" rx="18" ry="48"
+            fill="#65b8a2" stroke="#d3ffcf"
+            transform="rotate(225)"/>
+
+          <ellipse cx="0" cy="-48" rx="18" ry="48"
+            fill="#8f79d9" stroke="#d6c8ff"
+            transform="rotate(270)"/>
+
+          <ellipse cx="0" cy="-48" rx="18" ry="48"
+            fill="url(#goldPetal)" stroke="#fff0b0"
+            transform="rotate(315)"/>
+
+        </g>
+
+        <circle cx="150" cy="150" r="30"
+          fill="#f9b74e" stroke="#fff0a3" stroke-width="3"/>
+
+        <g fill="#ffe08b">
+          <circle cx="150" cy="25" r="5"/>
+          <circle cx="275" cy="150" r="5"/>
+          <circle cx="150" cy="275" r="5"/>
+          <circle cx="25" cy="150" r="5"/>
+          <circle cx="62" cy="62" r="5"/>
+          <circle cx="238" cy="62" r="5"/>
+          <circle cx="62" cy="238" r="5"/>
+          <circle cx="238" cy="238" r="5"/>
+        </g>
+
+      </svg>
+
+      <div class="rangoli-center"
+        id="rangoliCenter"
+        onclick="completeRangoli()">
+      </div>
+    </div>
+
+    <p class="counter" id="rangoliText">
+      Tap the glowing centre to complete your rangoli.
+    </p>
+
+    <button class="btn" id="rangoliNext"
+      onclick="goToPage(5)" disabled>
+      OPEN YOUR FINAL SURPRISE →
+    </button>
+
+  </div>
+  <div class="page-number">04 / 05</div>
+</section>
+
+
+<!-- PAGE 5: FINAL LETTER -->
+
+<section class="page" id="page5">
+  <div class="content">
+
+    <p class="eyebrow">A LITTLE NOTE FOR YOU</p>
+
+    <div class="letter-card">
+
+      <div class="letter-title">
+        Happy Diwali, Roshini!
+      </div>
+
+      <div class="letter-text">
+
+        Hey Roshini! 🪔✨
+        <br><br>
+
+        Wishing you a very Happy Diwali! ❤️
+
+        <br><br>
+
+        It's funny how some people enter our lives
+        unexpectedly, and even a simple conversation
+        can bring a little smile. I'm glad we got to
+        know each other, even if it's only been recently.
+
+        <br><br>
+
+        May your life shine brighter than the Diwali
+        lights, may your smile never fade, and may
+        this festival bring you endless happiness,
+        beautiful memories, and countless reasons
+        to smile.
+
+        <br><br>
+
+        Keep shining, Roshini. You deserve all the
+        beautiful things life has to offer. ✨🌸
+
+        <div class="signature">
+          Happy Diwali! ❤️
+        </div>
+
+      </div>
+    </div>
+
+    <div class="heart">💛 🪔 💛</div>
+
+    <button class="btn" onclick="celebrate()">
+      CELEBRATE THE MAGIC ✨
+    </button>
+
+    <p class="hint">Made with care, just for you.</p>
+
+  </div>
+  <div class="page-number">05 / 05</div>
+</section>
+
+
+<script>
+
+/* --------------------------------
+   PAGE NAVIGATION
+-------------------------------- */
+
+let currentPage = 1;
+let backgroundFireworks = null;
+
+function goToPage(number) {
+
+  document.getElementById("page" + currentPage)
+    .classList.remove("active");
+
+  currentPage = number;
+
+  document.getElementById("page" + currentPage)
+    .classList.add("active");
+
+  // Fireworks only on Page 3 and Page 5
+  if (number === 3 || number === 5) {
+    startBackgroundFireworks();
+  } else {
+    stopBackgroundFireworks();
+  }
+
+  if (number === 5) {
+    setTimeout(celebrate, 600);
+  }
+}
+
+
+/* --------------------------------
+   DIYA INTERACTION
+-------------------------------- */
+
+let litDiyas = new Set();
+
+function lightDiya(index) {
+
+  if (litDiyas.has(index)) return;
+
+  litDiyas.add(index);
+
+  document.querySelectorAll(".diya-wrap")[index]
+    .classList.add("lit");
+
+  document.getElementById("diyaCounter").textContent =
+    litDiyas.size + " / 3 diyas glowing";
+
+  if (litDiyas.size === 3) {
+
+    document.getElementById("diyaNext").disabled = false;
+
+    document.querySelector("#page2 .hint").textContent =
+      "Beautiful! All three diyas are glowing. ✨";
+  }
+}
+
+
+/* --------------------------------
+   FIREWORK BUTTON INTERACTION
+-------------------------------- */
+
+let launched = new Set();
+
+function launchFirework(index) {
+
+  if (launched.has(index)) return;
+
+  launched.add(index);
+
+  const buttons = document.querySelectorAll(".firework");
+
+  buttons[index].classList.add("done");
+
+  buttons[index].innerHTML =
+    "🌟<small>LAUNCHED!</small>";
+
+  // Multiple visible bursts when tapped
+  for (let i = 0; i < 5; i++) {
+
+    setTimeout(() => {
+
+      burst(
+        Math.random() * window.innerWidth,
+        Math.random() * window.innerHeight * 0.60
+      );
+
+    }, i * 180);
+  }
+
+  document.getElementById("fireCounter").textContent =
+    launched.size + " / 3 fireworks launched";
+
+  if (launched.size === 3) {
+
+    document.getElementById("fireNext").disabled = false;
+
+    document.querySelector("#page3 .hint").textContent =
+      "The sky is glowing! Your next surprise is ready.";
+  }
+}
+
+
+/* --------------------------------
+   RANGOLI INTERACTION
+-------------------------------- */
+
+function completeRangoli() {
+
+  const center = document.getElementById("rangoliCenter");
+
+  if (center.classList.contains("completed")) return;
+
+  center.classList.add("completed");
+
+  document.getElementById("rangoliText").textContent =
+    "Your beautiful rangoli is complete! 🌸";
+
+  document.getElementById("rangoliNext").disabled = false;
+
+  burst(
+    window.innerWidth / 2,
+    window.innerHeight / 2
+  );
+}
+
+
+/* --------------------------------
+   FIREWORK ANIMATION ENGINE
+-------------------------------- */
+
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+
+let particles = [];
+
+const colors = [
+  "#ffd166",
+  "#ff7b8a",
+  "#ffffff",
+  "#bba0ff",
+  "#ffad42",
+  "#70e1c1",
+  "#ff69d4"
+];
+
+function resizeCanvas() {
+
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+  canvas.width = window.innerWidth * dpr;
+  canvas.height = window.innerHeight * dpr;
+
+  canvas.style.width = window.innerWidth + "px";
+  canvas.style.height = window.innerHeight + "px";
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+resizeCanvas();
+
+window.addEventListener("resize", resizeCanvas);
+
+
+/* CREATE ONE FIREWORK BURST */
+
+function burst(x, y) {
+
+  const color =
+    colors[Math.floor(Math.random() * colors.length)];
+
+  const total = 85;
+
+  for (let i = 0; i < total; i++) {
+
+    const angle = Math.random() * Math.PI * 2;
+
+    const speed = Math.random() * 4.5 + 1;
+
+    particles.push({
+
+      x: x,
+      y: y,
+
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+
+      life: 100,
+      maxLife: 100,
+
+      size: Math.random() * 2.5 + 1,
+
+      color: Math.random() > .25
+        ? color
+        : colors[Math.floor(Math.random() * colors.length)]
+
+    });
+  }
+}
+
+
+/* ANIMATE EVERY PARTICLE */
+
+function animate() {
+
+  ctx.clearRect(
+    0,
+    0,
+    window.innerWidth,
+    window.innerHeight
+  );
+
+  particles = particles.filter(p => p.life > 0);
+
+  particles.forEach(p => {
+
+    p.x += p.vx;
+    p.y += p.vy;
+
+    p.vx *= .985;
+    p.vy *= .985;
+
+    p.vy += .025;
+
+    p.life--;
+
+    ctx.globalAlpha = Math.max(
+      0,
+      p.life / p.maxLife
+    );
+
+    ctx.fillStyle = p.color;
+
+    ctx.beginPath();
+
+    ctx.arc(
+      p.x,
+      p.y,
+      p.size,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fill();
+
+  });
+
+  ctx.globalAlpha = 1;
+
+  requestAnimationFrame(animate);
+}
+
+animate();
+
+
+/* --------------------------------
+   AUTOMATIC BACKGROUND FIREWORKS
+-------------------------------- */
+
+function startBackgroundFireworks() {
+
+  if (backgroundFireworks) return;
+
+  backgroundFireworks = setInterval(() => {
+
+    if (currentPage === 3 || currentPage === 5) {
+
+      burst(
+        Math.random() * window.innerWidth,
+        Math.random() * window.innerHeight * .58
+      );
+
+    }
+
+  }, 650);
+}
+
+
+function stopBackgroundFireworks() {
+
+  if (backgroundFireworks) {
+
+    clearInterval(backgroundFireworks);
+
+    backgroundFireworks = null;
+  }
+}
+
+
+/* --------------------------------
+   FINAL CELEBRATION
+-------------------------------- */
+
+let celebrationStarted = false;
+
+function celebrate() {
+
+  if (celebrationStarted) return;
+
+  celebrationStarted = true;
+
+  let count = 0;
+
+  const interval = setInterval(() => {
+
+    burst(
+      Math.random() * window.innerWidth,
+      Math.random() * window.innerHeight * .60
+    );
+
+    count++;
+
+    if (count >= 18) {
+
+      clearInterval(interval);
+
+      celebrationStarted = false;
+    }
+
+  }, 350);
+}
+
+</script>
+
+</body>
+</html>
